@@ -87,7 +87,7 @@ p{
   position: relative;
 	
 	animation: down 5s infinite;
-	-webkit-animation: down 5s infinite;
+	-webkit-animation: down 5s infinite;}
 	&::before {
 		content: '';
 		position: absolute;
@@ -99,7 +99,7 @@ p{
   	border-bottom: 2px solid #333;
 		transform: rotate(-45deg);
 	}
-}
+
 
 @keyframes down {
 	0% {
@@ -124,3 +124,40 @@ p{
 		transform: translate(0);
 	}
 }
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #060101;
+  display:flex;
+  top: 0;
+  width: 100%;
+}
+
+li {
+  float: left;
+  border-right: 1px solid #faf8f8;
+}
+.navbar{
+  margin: 1px;
+}
+.menu{
+display: flex;
+padding-left: 70%;
+}
+li a {
+  display: block;
+  color: rgb(255, 255, 255);
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+li a:hover {
+  background-color: #7d7575;
+}
+
+.active {
+  background-color: #4CAF50;
+}
+
