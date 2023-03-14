@@ -128,12 +128,13 @@ p{
 	}
 }
 .navbar{
-  padding-top: 20px;
+  padding-top: 10px;
   list-style-type: none;
   margin: 0px;
   padding: 5px;
-  overflow:hidden;
-  background-color: #060101;
+  overflow: hidden;
+  text-align: center; 
+  background-color: #000000;
   display: flex;
   justify-content: space-between;
   top: 0;
@@ -141,11 +142,13 @@ p{
   position: sticky;
   top: 0;
   transition: all 0.5s;
+  
 }
 
 .navbar li {
   float: left;
   border-right: 1px solid #858484;
+  
 }
 
 .menu{
@@ -306,7 +309,7 @@ body {
 .sidenav {
   width: 40%;
   background-color: #000;
-      position: absolute;
+      position: fixed;
       z-index: 1;
       left: 0;
       height: 100%;
@@ -314,7 +317,7 @@ body {
 
 
 .main {
-  padding: 0px 10px;
+padding: 10px;
 }
 
 @media screen and (max-height: 450px) {
@@ -324,6 +327,7 @@ body {
 @media screen and (max-width: 450px) {
   .login-form{
       margin-top: 10%;
+      width: 20%;
   }
 
   .register-form{
@@ -334,19 +338,31 @@ body {
 @media screen and (min-width: 768px){
   .main{
       margin-left: 40%; 
+      
   }
 
   .sidenav{
       width: 40%;
-      position: absolute;
+      position: fixed;
       z-index: 1;
       left: 0;
       height: 100%;
   }
 
   .login-form{
-      margin-top: 50%;
+  
+      margin-top: 20%;
+      margin-left: 3%;
+      
+          
   }
+  .form-control{
+    border-radius: 20px;
+    margin: 5px;
+    width: 50%;
+   
+  }
+  
 
   .register-form{
       margin-top: 20%;
@@ -365,8 +381,14 @@ body {
 }
 
 .btn-black{
-  background-color: #000 !important;
-  color: #fff;
+
+  background-color: #080808;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 17px;
+  font-family: Raleway;
+  cursor: pointer;
 }
 /*registration */
 
