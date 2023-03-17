@@ -22,8 +22,8 @@
     background-color: #ffffff;
     margin-left: 40%;
     font-family: Raleway;
-    padding: 20px;
-    padding-top: 180px;
+    padding: 30px;
+    padding-top: 100px;
     height: 100%;
    
 }
@@ -61,6 +61,15 @@ body {
   margin:0;
   padding:0;
   background: #ebebeb;
+
+  
+  
+}
+img{
+  transition: transform .2s;
+}
+img:hover{
+  transform: scale(2);
   
 }
 .social-buttons{
@@ -70,6 +79,8 @@ padding: 10px;
 margin-top:50px ;
 border:2px solid #0c0b0b;
 border-radius: 20px;
+width: 100%;
+overflow: hidden;
 
 
 }
@@ -78,18 +89,26 @@ border-radius: 20px;
 @media screen and (min-width: 768px)
 {
   .icon{
-    display: flex;
-    float:right;
+    width: fit-content;
+   
+    
+  float:right;
+
   }
 }
 @media screen and (max-width: 768px)
 {
   .icon{
-    height:50px;
+    width: fit-content;
+
+    
     width: 50px;
-    display: flex;
+   
+    
     float:right;
   }
+ 
+
 }
 form ul {
   
@@ -241,17 +260,22 @@ form ul li a:hover:nth-child(4) {
         </div>
      </div>
 
-     <form class="contact">      
+     <form class="contact">  
+        <h3>Contact us</h3>    
         <input name="name" type="text" class="feedback-input" placeholder="Name" />   
         <input name="email" type="text" class="feedback-input" placeholder="Email" />
         <textarea name="text" class="feedback-input" placeholder="Comment"></textarea><br>
-        <input style="margin: 10px;"type="submit" value="SUBMIT"/><br>
+        <button style="margin:10px;" class="button-57" role="button"><span class="text">Submit</span><span>We are happy to help y</span></button>
+        
+     
         <h2>Brought to you by:<br></b></h2>
       
 
       <div  class="social-buttons">
-          <h3>Aditya kumar gope</h3>
-          <img style="border-radius:50px;border:40px;height:150px;width:160px;" src="images/aditya.png">
+        
+            <h3>Aditya kumar gope</h3>
+            <img style="border-radius:50px;border:4px;height:150px;width:160px;" src="images/aditya.png">
+         
           <div class="icon">
           <ul>
             <li >
@@ -293,88 +317,98 @@ form ul li a:hover:nth-child(4) {
           </ul>
           </div>
         </div>
+        <div  class="social-buttons">
+        
           <h3>Ranjana</h3>
-          <div  class="social-buttons">
-            <ul>
-              <li >
-                <a style="height: 50px;width:50px;"class="facebook" href="https://www.facebook.com/aditya.kumargope">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <i  class="fa fa-facebook" aria-hidden="true"></i>
-                </a>
-              </li>
-              <li>
-                <a style="height: 50px;width:50px;" class="twitter" href="#">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <i class="fa fa-twitter" aria-hidden="true"></i>
-                </a>
-              </li>
-              <li>
-                <a style="height: 50px;width:50px;" class="instagram" href="#">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <i class="fa fa-instagram" aria-hidden="true"></i>
-                </a>
-              </li>
-              <li>
-                <a style="height: 50px;width:50px;" class="google" href="#">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <i  class="fa fa-google-plus" aria-hidden="true"></i>
-                </a>
-              </li>
-            </ul>
-            </div>
-            <h3>pankaj</h3>
-            <div  class="social-buttons">
-              <ul>
-                <li >
-                  <a style="height: 50px;width:50px;"class="facebook" href="https://www.facebook.com/aditya.kumargope">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <i  class="fa fa-facebook" aria-hidden="true"></i>
-                  </a>
-                </li>
-                <li>
-                  <a style="height: 50px;width:50px;" class="twitter" href="#">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <i class="fa fa-twitter" aria-hidden="true"></i>
-                  </a>
-                </li>
-                <li>
-                  <a style="height: 50px;width:50px;" class="instagram" href="#">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <i class="fa fa-instagram" aria-hidden="true"></i>
-                  </a>
-                </li>
-                <li>
-                  <a style="height: 50px;width:50px;" class="google" href="#">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <i  class="fa fa-google-plus" aria-hidden="true"></i>
-                  </a>
-                </li>
-              </ul>
-              </div>
+          <img style="object-fit:cover;border-radius:50px;border:4px;height:150px;width:160px;" src="images/ranjana.jpeg">
+       
+        <div class="icon">
+        <ul>
+          <li >
+            <a style="height: 50px;width:50px;"class="facebook" href="https://www.facebook.com/aditya.kumargope">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <i  class="fa fa-facebook" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li>
+            <a style="height: 50px;width:50px;" class="twitter" href="#">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <i class="fa fa-twitter" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li>
+            <a style="height: 50px;width:50px;" class="instagram" href="#">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <i class="fa fa-instagram" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li>
+            <a style="height: 50px;width:50px;" class="google" href="#">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <i  class="fa fa-google-plus" aria-hidden="true"></i>
+            </a>
+          </li>
+        </ul>
+        </div>
+      </div>
+      <div  class="social-buttons">
+        
+        <h3>Pankaj</h3>
+        <img style="  object-fit:cover;border-radius:50px;border:4px;height:150px;width:160px;" src="images/pankaj.jpeg">
+     
+      <div class="icon">
+      <ul>
+        <li >
+          <a style="height: 50px;width:50px;"class="facebook" target="_blank" href="https://www.facebook.com/aditya.kumargope">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <i  class="fa fa-facebook" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li>
+          <a style="height: 50px;width:50px;" class="twitter" href="#">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <i class="fa fa-twitter" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li>
+          <a style="height: 50px;width:50px;" class="instagram" href="#">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <i class="fa fa-instagram" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li>
+          <a style="height: 50px;width:50px;" class="google" href="#">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <i  class="fa fa-google-plus" aria-hidden="true"></i>
+          </a>
+        </li>
+      </ul>
+      </div>
+    </div>
           
           
       </form>
