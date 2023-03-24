@@ -5,6 +5,7 @@ const mysql = require("./connection").con
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+
 app.use(cors())
 
 app.use(express.json())
@@ -35,7 +36,10 @@ app.post("/login", (req, res) => {
         if (err) throw err
         else {
             if (results.length == 1)
+            {
                 res.send({ "status": true })
+                res.redirect('/login_mode');
+            }
             else
                 res.send({ "status": false })
         }
