@@ -1,51 +1,100 @@
 <!DOCTYPE html>
 <html>
-<title>
-    QUICKIE:As quick as it sounds.
-</title>
-<head>
+  <title>QUICKIE:As quick as it sounds.</title>
+  <head>
     <script src=""></script>
     <link rel="stylesheet" type="text/css" href="style.css" />
-   
-  
-</head>
-<body>
-    <ul  class="navbar" id="navbar">
-     
-        <img  style="padding: left 10px;" src="images/mainlogo.png" height="45" width="150" alt="LOGO" >
-        <div class="menu">
+  </head>
+  <body>
+    <ul class="navbar" id="navbar">
+      <img
+        style="padding: left 10px"
+        src="images/mainlogo.png"
+        height="45"
+        width="150"
+        alt="LOGO"
+      />
+      <div class="menu">
         <li><a href="index.html">HOME</a></li>
         <li><a href="registration.html">REGISTER FIRST</a></li>
         <li><a href="contact.html">CONTACT US</a></li>
         <li><a href="login_mode.html">{dev}after login</a></li>
-        </div>
+      </div>
     </ul>
     <div class="sidenav">
-        <div class="login-main-text">
-           <h2>Application<br> Login Page</h2>
-           <p>Login or register from here to access.</p>
-        </div>
-     </div>
-     <div class="main">
-        <div class="col-md-6 col-sm-12">
-           <div class="login-form">
-              <form>
-                 <div class="form-group">
-                    <label>Username: <br></label>
-                    <input type="text" class="form-control" placeholder="Username">
-                 </div>
-                 <div class="form-group">
-                    <label>Password:<br> </label>
-                    <input type="password" class="form-control" placeholder="Password">
-                 </div>
-                 <button onclick="submit()" style=" margin-top:15px;"type="submit" class="btn btn-black">Login</button>
-           
-                 <a href="registration.html"><button type="submit" class="btn btn-black">Register</button></a>
-              </form>
-           </div>
-        </div>
-     </div>
-     
- 
-</body>
+      <div class="login-main-text">
+        <h2>
+          Application<br />
+          Login Page
+        </h2>
+        <p>Login or register from here to access.</p>
+      </div>
+    </div>
+    <div class="main">
+      <div class="col-md-6 col-sm-12">
+        <div class="login-form">
+          <form onsubmit="return false">
+            <div class="form-group">
+              <label>Username: <br /></label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Username"
+                id="username"
+              />
+            </div>
+            <div class="form-group">
+              <label>Password:<br /> </label>
+              <input
+                type="password"
+                class="form-control"
+                placeholder="Password"
+                id="password"
+              />
+            </div>
+            <button
+              style="margin-top: 15px"
+              onclick="login()"
+              class="btn btn-black"
+            >
+              Login
+            </button>
 
+            <button class="btn btn-black" onclick="register()">Register</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const register = () => {
+        window.location.replace("http://127.0.0.1:5500/registration.html");
+      };
+
+      const login = () => {
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+
+        let newData =
+          "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
+
+        fetch("http://localhost:3000/login", {
+          method: "POST",
+          body: newData,
+          headers: { "Content-type": "application/json; charset=UTF-8" },
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            if(json.status){
+              //On success code
+              console.log("Succesful")
+              return
+            }
+            // failed code
+            console.log("Failed")
+          })
+          .catch((err) => console.log(err));
+      };
+    </script>
+  </body>
+</html>
