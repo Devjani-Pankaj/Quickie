@@ -52,6 +52,7 @@
                 id="password"
               />
             </div>
+            
             <button
               style="margin-top: 15px"
               onclick="login()"
@@ -59,8 +60,10 @@
             >
               Login
             </button>
+          
 
             <button class="btn btn-black" onclick="register()">Register</button>
+            <span id="login-error"></span>
           </form>
         </div>
       </div>
@@ -87,11 +90,15 @@
           .then((json) => {
             if(json.status){
               //On success code
-              console.log("Succesful")
-              return
+              console.log("Successful")
+              window.location.replace("http://127.0.0.1:5500/login_mode.html");
+              return 
             }
             // failed code
+          
+            document.getElementById("login-error").innerHTML = "Wrong password";
             console.log("Failed")
+            
           })
           .catch((err) => console.log(err));
       };
