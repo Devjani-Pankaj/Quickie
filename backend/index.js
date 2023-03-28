@@ -59,7 +59,7 @@ app.post("/register", (req, res) => {
     var username = req.body.username
     var dob = req.body.dob
 
-    mysql.query("Insert into user values(?,?,?,?,?,?,?,?)",[registration,firstname,phone,email,password,lastname,dob,username],(err, results) => {
+    mysql.query("Insert into user(user_id,Firstname,Lastname,Dob,username,Email,password,Phone) values(?,?,?,?,?,?,?,?)",[registration,firstname,lastname,dob,username,phone,email,password,phone],(err, results) => {
         if (err) throw err
         else {
             res.send({"status": "Inserted into database"})
