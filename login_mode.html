@@ -28,8 +28,8 @@
       }
       .toggle, .toggle:before, .slot__label, .curtain {
         transition-property: background-color, transform, visibility;
-        transition-duration: 0s.1;
-        transition-timing-function: ease-in, cubic-bezier(0.6,0.2,0.4,1.5), linear;
+        transition-duration: 0.3s;
+        transition-timing-function: ease-in, cubic-bezier(5,0.1,0.2,0),linear;
       }
       .toggle:before, .slot, .slot__label {
         display: block;
@@ -38,7 +38,7 @@
         position: absolute;
       }
       .toggle:checked, .curtain {
-        background-color: #08791b;
+        background-color: #197a20;
       }
       .toggle:focus {
         outline: transparent;
@@ -102,7 +102,6 @@
       .curtain {
         margin-left: 30%;
         margin-top: 8%;
-       
         top: 0;
         left: 0;
         width: 70%;
