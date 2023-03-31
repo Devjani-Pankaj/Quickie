@@ -253,9 +253,12 @@ display:flex;
     padding-bottom: 10%;
     width: fit-content;
     gap: 12px;
-    margin: 0 auto;
+    margin: auto;
+    
+    
 }
 .back_button button{
+  margin-top:40%;
   display: block;
   padding:100px;
 }

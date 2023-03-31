@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <title>
-    QUICKIE:As quick as it sounds.
+    QUICKIE: As quick as it sounds.
 </title>
 <head>
     <script src=""></script>
@@ -25,11 +25,13 @@
         margin-left:30%;
         width: auto;
         height: 100%;
+      
       }
       .toggle, .toggle:before, .slot__label, .curtain {
         transition-property: background-color, transform, visibility;
         transition-duration: 0.3s;
         transition-timing-function: ease-in, cubic-bezier(5,0.1,0.2,0),linear;
+        
       }
       .toggle:before, .slot, .slot__label {
         display: block;
@@ -38,13 +40,14 @@
         position: absolute;
       }
       .toggle:checked, .curtain {
-        background-color: #197a20;
+        background-color: #a52d2d;
+        
       }
       .toggle:focus {
         outline: transparent;
       }
       .toggle {
-        
+
         border-radius: 0.75em;
         box-shadow: 0 0 0 0.1em inset;
         margin-left: 50%;
@@ -124,7 +127,7 @@
         margin-top: 0;
         width: 100%;
         height: 100%;
- 
+       
        }
   </style>
 </head>
@@ -155,13 +158,13 @@
    
     
     </label>
-    <div class="delivermode">
+    <div  class="delivermode">
     
       <iframe src="delivery.html" width="100%" height="100%" style="border:none;">
       </iframe>
     </div>
     <div class="curtain">
-      <div class="ordermode">
+      <div style="background-color:white;" class="ordermode">
       
         <iframe src="order.html" width="100%" height="100%" style="border:none;">
         </iframe>
