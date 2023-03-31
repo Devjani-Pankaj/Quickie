@@ -279,7 +279,7 @@
           const day = document.getElementById("day").value;
           const month = document.getElementById("month").value;
           const year = document.getElementById("year").value;
-          const username = document.getElementById("registration").value;
+          const username = document.getElementById("username").value;
 
           let dob = year + "-" + month + "-" + day;
 
@@ -319,7 +319,8 @@
           y,
           i,
           valid = true;
-        x = document.getElementsByClassName("tab");
+        x = document.getElemen
+        tsByClassName("tab");
         y = x[currentTab].getElementsByTagName("input");
         // A loop that checks every input field in the current tab:
         for (i = 0; i < y.length; i++) {

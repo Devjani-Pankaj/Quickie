@@ -9,9 +9,10 @@ var fs = require("fs");
 
 app.use(cors())
 
-app.use(express.json())
-app.use(bodyParser.urlencoded({ extended: false }));
-
+// app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+// app.use(express.urlencoded());
 
 app.post('/getlogin', (req, res) => {
     console.log(req.query);
@@ -59,15 +60,34 @@ app.post("/register", (req, res) => {
     var username = req.body.username
     var dob = req.body.dob
 
-    mysql.query("Insert into user(user_id,Firstname,Lastname,Dob,username,Email,password,Phone) values(?,?,?,?,?,?,?,?)",[registration,firstname,lastname,dob,username,phone,email,password,phone],(err, results) => {
+    mysql.query("Insert into user(user_id,Firstname,Lastname,Dob,username,Email,password,Phone) values(?,?,?,?,?,?,?,?)",[registration,firstname,lastname,dob,username,email,password,phone],
+    (err, results) => {
         if (err) throw err
         else {
-            res.send({"status": "Inserted into database"})
+            //res.redirect("http://127.0.0.1:5500/login.html");
+            res.redirect(`/logindata/?userid=${registration}&username=${email}&password=${password}`)
         }
 
     });
 
 });
+
+
+app.get('/logindata',(req,res)=>
+{
+    console.log(req.query)
+    mysql.query("Insert into login(user_id,username,password) values(?,?,?)",[req.query.userid,req.query.username,req.query.password],
+    (err, results) => {
+        if (err) throw err
+        else {
+            console.log('data inserted to login table as well');
+            res.send({'status':'data inserted in login table'});
+        }
+
+    });
+
+
+})
 
 
 
@@ -92,25 +112,7 @@ app.get("/user", (req, res) => {
 
 });
 
-app.post("/registration", (req, res) => {
-    mysql.query("SELECT * from user where user_name=? and user_password=?", [req.body.username, req.body.password], (err, results) => {
-        if (err) throw err
-        else {
-            if (results.length == 1)
-            {
-                res.send({ "status": true })
-                
-                    
-                    res.redirect("/registration_module");
-                
-            }
-            else
-                res.send({ "status": false })
-        }
 
-    });
-
-});
 
 app.post("/register", (req, res) => {
     var username = req.body.username
