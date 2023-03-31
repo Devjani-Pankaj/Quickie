@@ -291,8 +291,7 @@
             phone: phone,
             password: password,
             username: username,
-            dob: dob
-          }
+            dob: dob}
 
           newJson = JSON.stringify(newJson)
 
@@ -333,8 +332,7 @@
         }
         // If the valid status is true, mark the step as finished and valid:
         if (valid) {
-          document.getElementsByClassName("step")[currentTab].className +=
-            " finish";
+          document.getElementsByClassName("step")[currentTab].className +="finish";
         }
 
         return valid; // return the valid status
