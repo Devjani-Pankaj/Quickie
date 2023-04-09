@@ -4,30 +4,270 @@
     QUICKIE:As quick as it sounds.
 </title>
 <head>
+  <style>
+    .table-container {
+      overflow: auto;
+    }
+    #delivery-table-list{
+      width: 100%;
+      min-width: 600px;
+      display: inline-table;
+      background-color:rgb(218, 245, 245);
+      
+    }
+    #delivery-table-list  th {
+      font-size: 16px;
+    }
+    #delivery-table-list  th:hover, #delivery-table-list  td:hover{
+      background-color:rgb(72, 216, 216);
+    }
+    #delivery-table-list  th, #delivery-table-list  td{
+      margin: 0;
+    }
+    #delivery-table-list  tr:hover {
+      background-color:aqua;
+      transition: all 0.3s;
+    }
+    #delivery-table-list  td {
+      font-size: 12px;
+      word-wrap: break-word;
+    }
+    #delivery-table-list  tr {
+      height: 48px;
+    }
+    .hidden {
+      display: none;
+    }
+    .order-details {
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+      margin: 0 auto;
+      border: 1px solid;
+      border-radius :12px;
+      position: absolute;
+      top: 0;
+      z-index: 5;
+      background-color: white;
+    }
+    .order-list {
+      justify-content: center;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    margin: 0 auto;
+    width: 90%;
+    padding: 40px 20px 0px 20px;
+    }
+    .order-list-photo {
+      min-width: 80px;
+      width: 80px;
+      height: 100px;
+      border: 1px solid;
+      border-radius: 6px;
+      position: relative;
+
+    }
+    .relative-container {
+      position: relative;
+
+    }
+    .order-list-name {
+      position: absolute;
+      top: -12px;
+      left: 0px;
+      z-index: 2;
+      font-size: 12px;
+      text-transform: capitalize;
+    }
+    .order-list-buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+      padding: 12px;
+      justify-content: center;
+      margin: 0 auto;
+      text-align: center;
+      
+    }
+    .green-button {
+      background-color: green;
+      border-radius: 8px;
+      color: white;
+      height: 40px;
+      min-width: 80px;
+      width: fit-content;
+      display: flex;
+      flex: 1;
+      text-align: center;
+      align-items: center;
+      border: none;
+      cursor: pointer;
+    }
+    .red-button {
+      background-color: red;
+      border-radius: 8px;
+      color: white;
+      height: 40px;
+      min-width: 80px;
+      width: fit-content;
+      align-items: center;
+      border: none;
+      cursor: pointer;
+    }
+    .red-button:hover, .green-button:hover {
+      opacity: 0.6
+    }
+  </style>
     <script src="index.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <script>
+      let orderDetailsStatus = false;
+      const addHidden = () => {
+        var element = document.getElementById("order-details");
+        console.log("added hidden")
+        element.classList.add("hidden");
+      }
+      const fillOrderDetails =  (items) => {
+        var element = document.getElementById("order-details");
+        element.classList.remove("hidden");
+        element.innerHTML = "";
+        fetch(`http://localhost:3001/itemsList?items=${items}`, {
+          method: "GET",
+          headers: { "Content-type": "application/json; charset=UTF-8" },
+        }).then(res => res.json()).then(json => {
+          if(json.status) {
+            //console.log("getting res from itemsList");
+
+            let el = "";
+            el += `<div class="order-list">`
+            json.data.map(itemList => {
+              el += `<span class="relative-container"><img  class="order-list-photo" src="${itemList.photo}">
+            <span class="order-list-name">${itemList.name}</span></img> </span>`
+            })
+            el+="</div>"
+            element.innerHTML += el;
+            el="";
+            
+            el+=`<div class="order-list-buttons">`
+            el += `<button class="green-button">Yes</button>`
+            el += `<button class="red-button" >Cancel</button>`
+              el+="</div>"
+              element.innerHTML += el;
+              el = "";
+          } else {
+            console.log("getting error from itemsList")
+          }
+        }).catch(err => {
+          console.error(err)
+        })
+        element.classList.remove("hidden");
+      }
+
+      const acceptFunc = (items) => {
+        orderDetailsStatus = true;
+        console.log("items from acceptfunc", items)
+        fillOrderDetails(items);
+      }
+      const rejectFunc = (items) => {
+        orderDetailsStatus=true;
+        console.log(items)
+        fillOrderDetails(items);
+      }
+      
+      const deliveryData = () => {
+        fetch("http://localhost:3001/deliveryList", {
+          method: "GET",
+          headers: { "Content-type": "application/json; charset=UTF-8" },
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            if(json.status){
+              //On success code
+              console.log("Clearly gettinmg a response fro deliveryList function")
+              console.log(json)
+              let table = document.getElementById("delivery-table-list")
+              table.innerHTML="";
+              var tr="";
+              tr+='<thead>'
+              tr+='<tr>';
+              Object.keys(json.data[0]).map(item => {
+                tr += '<th>' + item + '</th>'
+              })
+              tr+='<th>' + `Accept` + '</th>'
+                tr+='<th>' + `Reject` + '</th>'
+              tr+='</tr>'
+              tr+='</thead>'
+              table.innerHTML+=tr;
+              tr="";
+              json.data.map(x=>{
+                tr+='<tr>';
+                  Object.keys(x).map(item => {
+                    if(item === "time") {
+                      tr += '<td>' + new Date(x[item]).getHours() + ":" + new Date(x[item]).getMinutes() + ":" + new Date(x[item]).getSeconds()  + '</td>'
+                    } else if(item === "date") {
+                      tr += '<td>' + new Date(x[item]).getDate() + "/" + new Date(x[item]).getMonth() + "/" + new Date(x[item]).getFullYear() + '</td>'
+                    } else {
+                      tr += '<td>' + x[item] + '</td>'
+                    }
+                  })
+                  let itemList = x.items
+                tr+='<td>' + "<button onclick=acceptFunc(" + JSON.stringify(itemList) + ")>Accept</button>" + '</td>'
+                tr+='<td>' + `<button onclick=rejectFunc(${x["items"]})>Reject</button>` + '</td>'
+                tr+='</tr>'
+              })
+              table.innerHTML+=tr;
+              //window.localStorage.setItem("loginData", JSON.stringify(json))
+              //window.location.replace("http://127.0.0.1:5500/login_mode.html");
+              return 
+            }
+            // failed code
+          
+            //document.getElementById("deliveryList-error").innerHTML = "Wrong password";
+            console.log("Failed")
+            
+          })
+          .catch((err) => console.log(err));
+      };
+      deliveryData()
+      window.onload = function(){
+        let timer  = setInterval(() => {
+          deliveryData();
+        }, 5000)
+        timer();
+      }
+    </script>
+    <style>
+      
+    </style>
 </head>
 <body>
     <ul class="navbar" id="navbar">
      
-        <img  style="padding: left 10px;" src="images/mainlogo.png" height="45" width="150" alt="LOGO" >
+       
         <div class="menu">
       
         
-        <li><a href="contact.html">CONTACT US</a></li>
-       
+        <li><a href="contact.html">Pending Orders</a></li>
+        
         </div>
     </ul>
 
-    <div style="" class="sidenav">
-        <nav class="sidenavmenu">
-            <ul>
-              <li><span>FOOD</span></li>
-              <li><span>STATIONARY</span></li>
-              <li><span>CUSTOM ORDER</span></li>
-            </ul>
-          </nav>
-   
+  
+    <div class="table-container" style="margin:1%;height:100%;
+    box-sizing:border-box;"class="left-order">
+      <h1>&nbsp;&nbsp;CURRENT ORDERS</h1>
+      <table id="delivery-table-list"
+      style="overflow:auto;
+      ">
+      </table>
+      <div class="order-details hidden" id="order-details">
+      
+      </div>
     </div>
-    <h1>DELIVERY</h1>
+    
+   
 </body> 

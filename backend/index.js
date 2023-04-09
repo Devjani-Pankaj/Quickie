@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 3001;
 const mysql = require("./connection").con
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -39,7 +39,9 @@ app.post("/login", (req, res) => {
         else {
             if (results.length == 1)
             {
-                res.send({ "status": true })            
+                console.log(results)
+                res.send({ "status": true,
+                            "data": results })            
                     // res.redirect("/login_mode");
             }
             else
@@ -64,8 +66,9 @@ app.post("/register", (req, res) => {
     (err, results) => {
         if (err) throw err
         else {
-            //res.redirect("http://127.0.0.1:5500/login.html");
-            res.redirect(`/logindata/?userid=${registration}&username=${email}&password=${password}`)
+           
+            res.redirect(`/logindata/?userid=${registration}&username=${username}&password=${password}`)
+            
         }
 
     });
@@ -89,7 +92,68 @@ app.get('/logindata',(req,res)=>
 
 })
 
+//To get delivery items list
+app.get("/deliveryList", (req, res) => {
+    console.log("deliverList func called properly")
+    mysql.query("SELECT * FROM quickie.order", (err, results) => {
+        //console.log(results)
+        if(err) {
+            res.send({
+                status: false,
+                data: "Some error occured our side"
+            })
+        }
+        else {
+            res.send({
+                status: true,
+                data: results
+            })
+        }
+    })
+})
 
+//To get coins count
+app.get("/coinsAmount", (req, res) => {
+    console.log("coinsAmount func called properly")
+    console.log(req.query)
+    // console.log(`SELECT coins FROM quickie.user where user_id = ${req.query.user_id}`)
+    mysql.query(`SELECT coins FROM quickie.user where user_id = 23`, (err, results) => {
+        //console.log(results)
+        console.log(results)
+        if(err) {
+            res.send({
+                status: false,
+                data: "Some error occured our side"
+            })
+        }
+        else {
+            console.log(results)
+            res.send({
+                status: true,
+                data: results[0].coins
+            })
+        }
+    })
+})
+
+//To get items list from backend
+app.get("/itemsList", (req, res) => {
+    console.log("called itemsList");
+    items = req.query.items;
+    mysql.query(`SELECT * FROM quickie.item where iditem in (${items})`, (err, results) => {
+        console.log(results)
+        if(err) {
+            res.send({
+                status: false,
+            })
+        } else {
+            res.send({
+                status: true,
+                data: results
+            })
+        }
+    })
+})
 
 // pankaj code
 
