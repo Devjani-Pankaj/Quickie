@@ -94,7 +94,7 @@ app.get('/logindata',(req,res)=>
 
 //To get delivery items list
 app.get("/deliveryList", (req, res) => {
-    console.log("deliverList func called properly")
+    console.log("Delivery List successfully loaded")
     mysql.query("SELECT * FROM quickie.order", (err, results) => {
         //console.log(results)
         if(err) {
@@ -143,7 +143,9 @@ app.get("/itemsList", (req, res) => {
     mysql.query(`SELECT * FROM quickie.item where iditem in (${items})`, (err, results) => {
         console.log(results)
         if(err) {
+            console.log(items);
             res.send({
+                
                 status: false,
             })
         } else {

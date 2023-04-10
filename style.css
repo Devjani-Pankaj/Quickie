@@ -144,7 +144,7 @@ p{
   top: 0;
   transition: all 0.5s;
   z-index: 1;
-  
+ 
 }
 
 .navbar li {
@@ -288,7 +288,7 @@ display:flex;
 @media(max-width: 680px) {
   .navbar {
     flex-wrap:wrap;
-    justify-content: center;
+    justify-content:flex-start;
   }
 }
 /*LOGIN BOOTSTRAP*/

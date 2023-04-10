@@ -24,20 +24,26 @@
         height: 100%;
       
       }
+      .toggle{
+        background-color: #5c5959;
+      }
       .toggle, .toggle:before, .slot__label, .curtain {
         transition-property: background-color, transform, visibility;
         transition-duration: 0.3s;
         transition-timing-function: ease-in, cubic-bezier(5,0.1,0.2,0),linear;
+      
         
       }
       .toggle:before, .slot, .slot__label {
+        
         display: block;
       }
       .toggle:before, .curtain {
+        
         position: absolute;
       }
       .toggle:checked, .curtain {
-        background-color: #a52d2d;
+        background-color: #2d2b2b;
         
       }
       .toggle:focus {
@@ -82,7 +88,7 @@
         transform: scaleX(1);
       }
       .slot {
-        color: transparent;
+        color:rgb(107, 94, 22);
         margin-left: 47%;
         font-size: 1.5em;
         font-weight: bold;
@@ -91,7 +97,8 @@
         overflow:hidden;
         height: 1em;
         text-indent: 0em;
-        -webkit-text-stroke: 0.05em #fff;
+      
+        -webkit-text-stroke: 0.05em #060000;
       }
       .slot__label {
         transform-origin: 50% 0;
@@ -205,7 +212,7 @@
       </iframe>
     </div>
     <div class="curtain">
-      <div style="background-color:white;" class="ordermode">
+      <div style="background-color:rgb(242, 239, 239);" class="ordermode">
       
         <iframe src="order.html" width="100%" height="100%" style="border:none;">
         </iframe>
