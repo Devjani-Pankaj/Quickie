@@ -117,7 +117,7 @@ app.get("/coinsAmount", (req, res) => {
     console.log("coinsAmount func called properly")
     console.log(req.query)
     // console.log(`SELECT coins FROM quickie.user where user_id = ${req.query.user_id}`)
-    mysql.query(`SELECT coins FROM quickie.user where user_id = 23`, (err, results) => {
+    mysql.query(`SELECT coins FROM quickie.user where users.user_id = ${req.query.user_id}`, (err, results) => {
         //console.log(results)
         console.log(results)
         if(err) {

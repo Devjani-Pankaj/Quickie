@@ -2,31 +2,31 @@
 <!DOCTYPE html>
 <html>
 <title>
-    QUICKIE:As quick as it sounds.
+    QUICKIE: As quick as it sounds.
 </title>
 <head>
     <script src="index.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <style>
+      
         .sidenav{
-            width: 25.5%;
+            width: fit-content;
             background-color: #000;
-                position: fixed;
-                z-index: 1;
-                left: 0;
-                height: 100%;
+            position: fixed;
+            z-index: 1;
+            top:0;
+            left:0;
+            height:100%;
         }
         .sidenavmenu{
-            margin-top: 40%;
-            width: 100%;
-            height: fit-content;
-            
-            
-        }
+            margin-top:40%;
+          }
         
        .left-order{
-        margin-left: 30%;
+            top:0;
+            margin-left: 30%;
        } 
+
 nav ul {
 	list-style-type: none;
 	padding: 0;
@@ -277,29 +277,16 @@ nav ul li:hover::before {
     </script>
 </head>
 <body>
-    <ul class="navbar" id="navbar">
-     
-        <img  style="padding: left 10px;" src="images/mainlogo.png" height="45" width="150" alt="LOGO" >
-        <div class="menu">
-      
-        
-        <li><a href="">CART</a></li>
-      
-        </div>
+   
         <div  class="sidenav">
             <nav class="sidenavmenu">
                 <ul>
                   <li><span>FOOD</span></li>
                   <li><span>STATIONARY</span></li>
                   <li><span>CUSTOM ORDER</span></li>
-                   
                 </ul>
-              </nav>
-            
+            </nav>
         </div>
-    </ul>
-
-
     <div class="left-order">
         <h1></h1>
         <div class="shopping-cart">

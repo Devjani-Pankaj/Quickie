@@ -41,9 +41,22 @@
       
       
     }
+    #delivery-table-list button{
+     background-color: azure;
+     color:black;
+
+    }
+    #delivery-table-list button:hover{
+      background-color: rgb(6, 7, 7);
+      color:azure;
+      
+     }
+    
     #delivery-table-list  tr {
       height: 48px;
       margin: 2px;
+      text-align: center;
+      
       
     }
     .hidden {
@@ -166,7 +179,7 @@
   
     .ring-container {
       top:-40px;
-      left:150px;
+      left:105px;
       margin:0 ;
       width: 20px;
       height: 20px;
@@ -229,7 +242,7 @@
     <script src="index.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script>
-      
+       const head=(1,2,3,4,5,6)
       /*
       let orderDetailsStatus = false;
       const addHidden = () => {
@@ -323,17 +336,19 @@
               //On success code
               console.log("Clearly getting a response from deliveryList function")
               console.log(json)
+             
               let table = document.getElementById("delivery-table-list")
               table.innerHTML="";
               var tr="";
               tr+='<thead>'
               tr+='<tr>';
-              
-              Object.keys(json.data[0]).map(item => {
-                tr += '<th>' + item + '</th>'
-              })
+                
+             // Object.keys(json.data[0]).map(item => {
+              //tr += '<th>' + item+ '</th>'
+              //})
+              tr+='<th>' +"ORDER ID"+ '</th>'+'<th>' +"ORDERED BY"+ '</th>'+'<th>' +"DATE"+ '</th>'+'<th>' +"PLACED ON"+ '</th>'+'<th>' +"DROP LOCATION"+ '</th>'
               tr+='<br>'
-              tr+='<th>' + `Accept` + '</th>'
+              tr+='<th>' + `ACCEPT` + '</th>'
               //tr+='<th>' + `Reject` + '</th>'
               tr+='</tr>'
               tr+='</thead>'
@@ -346,12 +361,18 @@
                       tr += '<td>' + new Date(x[item]).getHours() + ":" + new Date(x[item]).getMinutes() + ":" + new Date(x[item]).getSeconds()  + '</td>'
                     } else if(item === "date") {
                       tr += '<td>' + new Date(x[item]).getDate() + "/" + new Date(x[item]).getMonth() + "/" + new Date(x[item]).getFullYear() + '</td>'
-                    } else {
+                    }
+                   else  if(item==="items")
+                    return null; 
+                    else {
                       tr += '<td>' + x[item] + '</td>'
                     }
+                   
+                    
+                    
                   })
                   let itemList = x.items
-                tr+='<td>' + "<button onclick=acceptFunc(" + JSON.stringify(itemList) + ")>Accept</button>" + '</td>'
+                tr+='<td>' + "<button onclick=acceptFunc(" + JSON.stringify(itemList) + ") >Accept</button>" + '</td>'
                 //tr+='<td>' + `<button onclick=rejectFunc(${x["items"]})>Reject</button>` + '</td>'
                 tr+='</tr>'
               })
@@ -381,21 +402,12 @@
     </style>
 </head>
 <body>
-    <ul class="navbar" id="navbar">
-     
-       
-        <div class="menu">
-      
-        
-        <li><a href="contact.html">Pending Orders</a></li>
-        
-        </div>
-    </ul>
+  
 
   
     <div class="table-container" style="margin:1.5%;height:100%;
     box-sizing:border-box;"class="left-order">
-    <span style="margin-top:5px;display:flex;margin-top:5px;">&nbsp;&nbsp;CURRENT ORDERS </span>
+    <span style="margin-top:5px;font:bold;font-size:16px;display:flex;margin-top:5px;">&nbsp;&nbsp;LIVE  ORDERS</span>
       <div class="ring-container">
         <div class="ringring"></div>
         <div class="circle"></div>
