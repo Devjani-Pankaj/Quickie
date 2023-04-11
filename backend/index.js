@@ -37,12 +37,13 @@ app.post("/login", (req, res) => {
     mysql.query("SELECT * from login where username=? and password=?", [req.body.username, req.body.password], (err, results) => {
         if (err) throw err
         else {
-            if (results.length == 1)
-            {
+            if (results.length == 1) {
                 console.log(results)
-                res.send({ "status": true,
-                            "data": results })            
-                    // res.redirect("/login_mode");
+                res.send({
+                    "status": true,
+                    "data": results
+                })
+                // res.redirect("/login_mode");
             }
             else
                 res.send({ "status": false })
@@ -62,32 +63,31 @@ app.post("/register", (req, res) => {
     var username = req.body.username
     var dob = req.body.dob
 
-    mysql.query("Insert into user(user_id,Firstname,Lastname,Dob,username,Email,password,Phone) values(?,?,?,?,?,?,?,?)",[registration,firstname,lastname,dob,username,email,password,phone],
-    (err, results) => {
-        if (err) throw err
-        else {
-           
-            res.redirect(`/logindata/?userid=${registration}&username=${username}&password=${password}`)
-            
-        }
+    mysql.query("Insert into user(user_id,Firstname,Lastname,Dob,username,Email,password,Phone) values(?,?,?,?,?,?,?,?)", [registration, firstname, lastname, dob, username, email, password, phone],
+        (err, results) => {
+            if (err) throw err
+            else {
 
-    });
+                res.redirect(`/logindata/?userid=${registration}&username=${username}&password=${password}`)
+
+            }
+
+        });
 
 });
 
 
-app.get('/logindata',(req,res)=>
-{
+app.get('/logindata', (req, res) => {
     console.log(req.query)
-    mysql.query("Insert into login(user_id,username,password) values(?,?,?)",[req.query.userid,req.query.username,req.query.password],
-    (err, results) => {
-        if (err) throw err
-        else {
-            console.log('data inserted to login table as well');
-            res.send({'status':'data inserted in login table'});
-        }
+    mysql.query("Insert into login(user_id,username,password) values(?,?,?)", [req.query.userid, req.query.username, req.query.password],
+        (err, results) => {
+            if (err) throw err
+            else {
+                console.log('data inserted to login table as well');
+                res.send({ 'status': 'data inserted in login table' });
+            }
 
-    });
+        });
 
 
 })
@@ -97,7 +97,7 @@ app.get("/deliveryList", (req, res) => {
     console.log("Delivery List successfully loaded")
     mysql.query("SELECT * FROM quickie.order", (err, results) => {
         //console.log(results)
-        if(err) {
+        if (err) {
             res.send({
                 status: false,
                 data: "Some error occured our side"
@@ -120,7 +120,7 @@ app.get("/coinsAmount", (req, res) => {
     mysql.query(`SELECT coins FROM quickie.user where users.user_id = ${req.query.user_id}`, (err, results) => {
         //console.log(results)
         console.log(results)
-        if(err) {
+        if (err) {
             res.send({
                 status: false,
                 data: "Some error occured our side"
@@ -142,10 +142,10 @@ app.get("/itemsList", (req, res) => {
     items = req.query.items;
     mysql.query(`SELECT * FROM quickie.item where iditem in (${items})`, (err, results) => {
         console.log(results)
-        if(err) {
+        if (err) {
             console.log(items);
             res.send({
-                
+
                 status: false,
             })
         } else {
@@ -178,13 +178,22 @@ app.get("/user", (req, res) => {
 
 });
 
+app.post("/contact", (req, res) => {
+    mysql.query("Insert into contact values(?,?,?)",[req.body.name,req.body.email,req.body.comment], (err, results) => {
+        if (err) throw err
+        else {
+            res.send(results);
+        }
+    });
+})
+
 
 
 app.post("/register", (req, res) => {
     var username = req.body.username
     var password = req.body.password
-    var Firstname =req.body.Firstname
-    var Lastname =req.body.Lastname
+    var Firstname = req.body.Firstname
+    var Lastname = req.body.Lastname
     // var 
     mysql.query("Insert into user()")
 })
