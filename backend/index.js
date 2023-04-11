@@ -118,10 +118,6 @@ app.get("/coinsAmount", (req, res) => {
     //console.log(req.query.user_id)
     //console.log(`SELECT coins FROM quickie.user where user_id = ${req.query.user_id}`)
     mysql.query(`SELECT coins FROM quickie.user where user.user_id = ${req.query.user_id}`, (err, results) => {
-       
-        //console.log(results)
-        if(err) {
-        console.log(results)
         if (err) {
             res.send({
                 status: false,
