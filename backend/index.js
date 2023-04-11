@@ -115,10 +115,12 @@ app.get("/deliveryList", (req, res) => {
 //To get coins count
 app.get("/coinsAmount", (req, res) => {
     console.log("coinsAmount func called properly")
-    console.log(req.query)
-    // console.log(`SELECT coins FROM quickie.user where user_id = ${req.query.user_id}`)
-    mysql.query(`SELECT coins FROM quickie.user where users.user_id = ${req.query.user_id}`, (err, results) => {
+    //console.log(req.query.user_id)
+    //console.log(`SELECT coins FROM quickie.user where user_id = ${req.query.user_id}`)
+    mysql.query(`SELECT coins FROM quickie.user where user.user_id = ${req.query.user_id}`, (err, results) => {
+       
         //console.log(results)
+        if(err) {
         console.log(results)
         if (err) {
             res.send({
@@ -196,6 +198,19 @@ app.post("/register", (req, res) => {
     var Lastname = req.body.Lastname
     // var 
     mysql.query("Insert into user()")
+})
+
+
+// Menu
+app.post("/getCategory",(req,res)=>{
+    console.log(req.body.category)
+    let qry = "select * from item where category_id='"+req.body.category+"'";
+    mysql.query(qry, (err, results) => {
+        if (err) throw err
+        else {
+            res.send(results);
+        }
+    });
 })
 
 app.listen(port, (err) => {
