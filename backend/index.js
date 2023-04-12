@@ -83,8 +83,8 @@ app.get('/logindata',(req,res)=>
     (err, results) => {
         if (err) throw err
         else {
-            console.log('data inserted to login table as well');
-            res.send({'status':'data inserted in login table'});
+            console.log('Data inserted to login table as well.');
+            res.send({'status':'data inserted in login table.'});
         }
 
     });
