@@ -143,6 +143,19 @@
       animation-fill-mode: forwards;
     }
 
+    .btt {
+      width: 80px;
+      height: 60px;
+      padding: 5px;
+      margin-left: 10px;
+      margin-top: 6px;
+      background-color: #E1E8EE;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+
+    }
+
     @keyframes animate {
       0% {
         background-position: left;
@@ -229,6 +242,7 @@
     .total-price {
       width: 83px;
       padding-top: 27px;
+
       text-align: center;
       font-size: 16px;
       color: #43484D;
@@ -263,6 +277,7 @@
       .buttons {
         margin-right: 20px;
       }
+
     }
   </style>
   <script>
@@ -275,7 +290,7 @@
       var $input = $this.closest('div').find('input');
       var value = parseInt($input.val());
 
-      if (value & amp; amp; gt; 1)
+      if (value & amp; amp; gt; 1);
     {
       value = value - 1;
     } else {
@@ -300,6 +315,8 @@
 
     $input.val(value);
         });
+
+
   </script>
 </head>
 
@@ -310,7 +327,9 @@
       <ul>
         <li onclick="showfood('food')"><span>FOOD</span></li>
         <li onclick="showfood('stationery')"><span>STATIONARY</span></li>
-        <li onclick="showfood('food')"><span>CUSTOM ORDER</span></li>
+        <li><span>CUSTOM ORDER</span></li>
+        <li onclick="cartList()"><span>CART</span></li>
+
       </ul>
     </nav>
   </div>
@@ -320,6 +339,7 @@
       <!-- Title -->
       <div class="title">
         Order Basket
+
       </div>
 
       <!-- Product #1 -->
@@ -350,9 +370,16 @@
         </div>
 
         <div class="total-price">Rs. 30.0</div>
+        <button class="btt">Add To cart</button>
       </div> -->
+
       <!-- List of items -->
       <span id="list"></span>
+      <table>
+        <tbody id="tbody">
+
+        </tbody>
+      </table>
 
     </div>
   </div>
@@ -374,23 +401,78 @@
           resp.map((item) => {
             var div = document.createElement('div')
             div.classList.add("item")
-            var html = '<div class="buttons"> <span class="delete-btn"></span> <span class="like-btn"></span> </div> <div class="image"> <img style="margin-left:0;height:80px;width: 80px;;" src=' + item.photo + ' alt="" /> </div> &nbsp; &nbsp; &nbsp; &nbsp; <div class="description"> <span>' + item.name + '</span> <span>' + item.detail + '</span> <span>Brown</span> </div> <div class="quantity"> <button class="plus-btn" type="button" name="button" onclick="increment(this)">+</button><input type="text" name="name" value="1"><button class="minus-btn" type="button" name="button" onclick="decrement(this)">-</button> </div> <div class="total-price">₹'+item.price+'</div>'
+            //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            var html = '<div class="buttons"> <span class="delete-btn"></span> <span class="like-btn"></span> </div> <div class="image"> <img style="margin-left:0;height:80px;width: 80px;;" src=' + item.photo + ' alt="" /> </div> &nbsp; &nbsp; &nbsp; &nbsp; <div class="description"> <span>' + item.name + '</span> <span>' + item.detail + '</span> <span>Brown</span> </div> <div class="quantity"> <button class="plus-btn" type="button" name="button" onclick="increment(this)">+</button><input type="text" name="name" value="1" id="quantity" ><button class="minus-btn" type="button" name="button" onclick="decrement(this)">-</button> </div> <div class="total-price">₹' + item.price + '</div><button class="btt" type = "submit" onclick = "handleApp(' + item.iditem + ',this)">Add To cart</button>'
             div.innerHTML = html
             console.log(div)
             document.getElementById('list').append(div)
           })
         })
     }
-
-    const increment = (e) => e.nextSibling.value++
+    let count;
+    const increment = (e) => count = e.nextSibling.value++
     //const decrement = (e) => e.previousSibling.value --
     const decrement = (e) => {
-      if (e.previousSibling.value > 0)
-        e.previousSibling.value--
+      if (e.previousSibling.value > 1)
+        count = e.previousSibling.value--
     }
     (function () {
       showfood("food")
     })()
+    console.log(count);
+    const cartList = () => {
+      document.getElementById('list').innerHTML = ""
+      document.getElementById('tbody').innerHTML = ""
+      console.log("list")
+      fetch('http://localhost:3001/cartItems')
+        .then(res => res.json())
+        .then(resp => {
+          // console.log(resp);
+          // document.getElementById("tbody").innerHTML = "";
+          // document.getElementById('list').innerHTML = ""
+          let sum = 0;
+          resp.results.map((item) => {
+            const li = document.createElement('tr');
+            tbl = '<td></td><td>' + item.name + '</td> <td> ' + item.price + '</td> <td> ' + item.quantity + '</td><td></td>'
+            li.innerHTML = tbl;
+            console.log(item.name);
+            document.getElementById("tbody").appendChild(li);
+          });
+          // document.getElementById("totalPrice").innerText = sum
+        })
+        .catch(err => console.log(err))
+
+    }
+
+    //cartList()
+
+    const handleApp = (iditem, e) => {
+      console.log(e.parentElement.children[3].children[1].value);
+      var jsonObj = {
+        iditem: iditem,
+        qty: e.parentElement.children[3].children[1].value
+      }
+      console.log(jsonObj);
+
+
+      fetch('http://localhost:3001/cart', {
+        method: "POST",
+        body: JSON.stringify(jsonObj),
+        headers: { "Content-type": "application/json; charset=UTF-8" }
+      })
+        .then(res => res.json())
+        .then(json => {
+          if (json.status) {
+            console.log("true");
+            cartList()
+            return;
+          }
+
+        })
+        .catch(err => console.log(err));
+
+
+    }
   </script>
 </body>
 
