@@ -62,8 +62,8 @@
             </button>
           
 
-            <button class="btn btn-black" onclick="register()">Register</button>
-            <span id="login-error"></span>
+            <button class="btn btn-black" onclick="register()">Register<br></button>
+            <span style="font-size:15px;color:red;margin-top:2%;display:flex;"id="login-error"></span>
           </form>
         </div>
       </div>
@@ -77,7 +77,7 @@
       const login = () => {
         let username = document.getElementById("username").value;
         let password = document.getElementById("password").value;
-
+        
         let newData =
           "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
 
@@ -98,7 +98,7 @@
             }
             // failed code
           
-            document.getElementById("login-error").innerHTML = "Wrong password";
+            document.getElementById("login-error").innerHTML = "Wrong username or password!";
             console.log("Failed")
             
           })

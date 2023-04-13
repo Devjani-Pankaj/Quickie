@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<title>
+    QUICKIE:As quick as it sounds.
+</title>
+<head>
+    <script src="index.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <style>
+        .back_button:hover
+        {
+        cursor:pointer;
+        }
+        .login-main-text{
+            margin:0;
+            padding-top: 0;
+            padding-left: 5%;
+          
+        }
+          
+          
+          .back-button{
+            margin:0;
+            padding-top: 5%;
+           
+            top:0;
+
+          
+            
+          }
+          
+          a {
+            display: inline-block;
+            border-radius: 50%;
+            }
+          
+          a:hover .left, a:hover .top, a:hover .bottom, a:hover .right{
+            border: 0.5em solid #ea9124;
+          }
+          
+          a:hover .left:after, a:hover .top:after, a:hover .bottom:after, a:hover .right:after {
+            border-top: 0.5em solid #ea9124;
+            border-right: 0.5em solid #ea9124;
+          }
+          
+          .left {
+            display: inline-block;
+            width: 5em;
+            height: 5em;
+            border: 0.5em solid #333;
+            border-radius: 50%;
+            margin-right: 1.5em;
+          }
+          
+          .left:after {
+            content: '';
+              display: inline-block;
+            margin-top: 1.0em;
+            margin-left: 1.3em;
+            width: 1.4em;
+            height: 1.4em;
+            border-top: 0.5em solid #333;
+            border-right: 0.5em solid #333;
+            -moz-transform: rotate(-135deg);
+            -webkit-transform: rotate(-135deg);
+            transform: rotate(-135deg);
+          }
+          </style>
+          <script>
+            const takeuserprofile =  (items) => {
+              let newData ={
+                user_id: JSON.parse(window.localStorage.getItem("loginData")).data[0].username
+              };
+              console.log(newData)
+               fetch(`http://localhost:3001/userprofile?user_id=${JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id}`, {
+                method: "GET",
+                headers: { "Content-type": "application/json; charset=UTF-8" },
+              }).then(res => res.json()).then(json => {
+                if(json.status) {
+                  console.log("getting res from userprofile");
+                  tr="";
+                  json.data.map(x=>{
+                  Object.keys(x).map(item => {
+                    tr += '<td>' + x[item] + '</td>'
+                    document.getElementById("profile-table-list").innerHTML="";
+                  })
+                })
+      
+                } else {
+                  console.log("getting error from userprofile")
+                }
+              }).catch(err => {
+                console.error(err)
+              })
+             // element.classList.remove("hidden");
+            }
+            takeuserprofile();
+          
+          </script>
+</head>
+<body>
+    
+    <div style="width:30%;"class="sidenav">
+        <div class="login-main-text">
+            <div class="back-button">
+                <a href="#">
+                  <span onclick="history.back()" class="left"></span>
+                </a>
+              </div>
+                
+            
+          <h2 style="font-size:30px;margin-top:35%;">
+           USER<br />
+           PROFILE
+          </h2>
+          <br>
+          <p>Thank you for being with us.</p>
+          <p>You are very valuable to us.</p>
+        </div>
+      </div>
+      <div style="" class="right-profile-div">
+        <h1>table</h1>
+       <table id="profile-table-list">
+
+       </table>
+
+      </div>
+</body>
