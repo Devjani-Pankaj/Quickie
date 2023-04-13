@@ -66,6 +66,37 @@
             transform: rotate(-135deg);
           }
           </style>
+          <script>
+            const takeuserprofile =  (items) => {
+              let newData ={
+                user_id: JSON.parse(window.localStorage.getItem("loginData")).data[0].username
+              };
+              console.log(newData)
+               fetch(`http://localhost:3001/userprofile?user_id=${JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id}`, {
+                method: "GET",
+                headers: { "Content-type": "application/json; charset=UTF-8" },
+              }).then(res => res.json()).then(json => {
+                if(json.status) {
+                  console.log("getting res from userprofile");
+                  tr="";
+                  json.data.map(x=>{
+                  Object.keys(x).map(item => {
+                    tr += '<td>' + x[item] + '</td>'
+                    document.getElementById("profile-table-list").innerHTML="";
+                  })
+                })
+      
+                } else {
+                  console.log("getting error from userprofile")
+                }
+              }).catch(err => {
+                console.error(err)
+              })
+             // element.classList.remove("hidden");
+            }
+            takeuserprofile();
+          
+          </script>
 </head>
 <body>
     
@@ -87,8 +118,11 @@
           <p>You are very valuable to us.</p>
         </div>
       </div>
-      <div class="right-profile-div">
+      <div style="" class="right-profile-div">
+        <h1>table</h1>
+       <table id="profile-table-list">
 
+       </table>
 
       </div>
 </body>
