@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const port = 3001;
 const mysql = require("./connection").con
+const connection = require("./connection").con
 const bodyParser = require('body-parser');
 const cors = require('cors');
 var http = require("http");
@@ -156,7 +157,38 @@ app.get("/itemsList", (req, res) => {
         }
     })
 })
-
+//cart
+app.post('/cart', (req, res) => {
+    let iditem = req.body.iditem;
+    let price = req.body.price;
+    console.log(price);
+    console.log(iditem);
+    connection.query('select * from cart where iditem = ? ',[iditem],function(err,results){
+        if(results.length>0)
+        {
+            connection.query('update cart set quantity = ?  where iditem = ?',[req.body.qty,iditem],function(err,results){
+                if(err)throw err;
+                res.send({"stat":true});
+                
+        })
+        }
+        else{
+            mysql.query ('Insert into cart values (?,?,?) ',[iditem,req.body.qty,price],function(error,results){
+  
+                if(error) throw error;
+                res.send({"status":true});
+             });
+        }
+    })
+    
+  });
+  app.get("/cartItems", (req,res)=>{
+    
+    connection.query("select item.photo,item.name,item.detail,item.price,cart.quantity from item join cart where cart.iditem=item.iditem", (err, results)=> {
+      if(err) throw err;
+      res.send({results:results});
+    })
+  })
 // pankaj code
 
 app.post('/getregistration', (req, res) => {
