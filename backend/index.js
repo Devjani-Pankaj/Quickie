@@ -178,7 +178,14 @@ app.get("/user", (req, res) => {
 
 });
 
-
+app.post("/contact", (req, res) => {
+    mysql.query("Insert into contact values(?,?,?)",[req.body.name,req.body.email,req.body.comment], (err, results) => {
+        if (err) throw err
+        else {
+            res.send(results);
+        }
+    });
+})
 
 app.post("/register", (req, res) => {
     var username = req.body.username

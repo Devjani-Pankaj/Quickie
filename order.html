@@ -374,11 +374,7 @@
           resp.map((item) => {
             var div = document.createElement('div')
             div.classList.add("item")
-<<<<<<< HEAD
-            var html = '<div class="buttons"> <span class="delete-btn"></span> <span class="like-btn"></span> </div> <div class="image"> <img style="border-radius:5px;object-fit:cover;margin-left:0;height:80px;width: 80px;;" src=' + item.photo + ' alt="" /> </div> &nbsp; &nbsp; &nbsp; &nbsp; <div class="description"> <span>' + item.name + '</span> <span>' + item.detail + '</span> <span>Brown</span> </div> <div class="quantity"> <button class="plus-btn" type="button" name="button" onclick="increment(this)">+</button><input type="text" name="name" value="1"><button class="minus-btn" type="button" name="button" onclick="decrement(this)">-</button> </div> <div class="total-price">$349</div>'
-=======
             var html = '<div class="buttons"> <span class="delete-btn"></span> <span class="like-btn"></span> </div> <div class="image"> <img style="margin-left:0;height:80px;width: 80px;;" src=' + item.photo + ' alt="" /> </div> &nbsp; &nbsp; &nbsp; &nbsp; <div class="description"> <span>' + item.name + '</span> <span>' + item.detail + '</span> <span>Brown</span> </div> <div class="quantity"> <button class="plus-btn" type="button" name="button" onclick="increment(this)">+</button><input type="text" name="name" value="1"><button class="minus-btn" type="button" name="button" onclick="decrement(this)">-</button> </div> <div class="total-price">₹'+item.price+'</div>'
->>>>>>> beec4250430a11ca08005b2b2a2e64d4e2be1db0
             div.innerHTML = html
             console.log(div)
             document.getElementById('list').append(div)
