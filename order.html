@@ -74,6 +74,10 @@
       transform: scale(16);
     }
 
+    table {
+      text-align: center;
+    }
+
     /*cart dummy*/
     .shopping-cart {
      position:relative;
@@ -303,8 +307,19 @@
      
       
     }
+    .shopping-cart {
+      z-index: 5;
+      padding-bottom: 40px;
+    }
+    .custom-btn {
+      width: 100% !important;
+      height: 80px !important;
+      background-color: #000;
+      color: white;
+    }
   </style>
   <script>
+
     $('.like-btn').on('click', function () {
       $(this).toggleClass('is-active');
     });
@@ -344,14 +359,17 @@
   </script>
 </head>
 
-<body>
-
+<body onload = "showfood('food')">
   <div class="sidenav">
+    <div class="toast" id="toast">
+      <div class="toast-body">
+      </div>
+  </div>
     <nav class="sidenavmenu">
       <ul>
         <li onclick="showfood('food')"><span>FOOD</span></li>
         <li onclick="showfood('stationery')"><span>STATIONARY</span></li>
-        <li onclick="showfood('food')"><span>CUSTOM ORDER</span></li>
+        <!-- <li onclick="showfood('food')"><span>CUSTOM ORDER</span></li> -->
         <li onclick="cartList()"><span>CART</span></li>
 
       </ul>
@@ -366,17 +384,49 @@
         
       </div>
       <span id="list"></span>
-      <table >
+      <table id="theading">
+        <th>Name</th>
+        <th>Actual per quantity</th>
+        <th>Quantity</th>
+        <th>Price</th>
         <tbody id="tbody">
-
         </tbody>
+        <tfoot id="tfoot">
+          <td></td>
+          <td></td>
+          <td>Total</td>
+          <td id="totalPrice"></td>
+           </tfoot>
     </table>
-
+    <span id="warning-text"></span>
+    <form id="tform">
+      <!-- <label for="date">Date:</label>
+      <input type="text" id="date" name="date"><br><br> -->
+      
+      <!-- <input type="text" id="place" name="place" value="" onchange="changePlaceInput()"><br><br> -->
+      <button type="button" onclick="confirmOrder()" class="custom-btn">Confirm Order!</button>
+    </form>
     </div>
   </div>
 
   <script>
+    
+    const changePlaceInput = () => {
+      console.log("change input")
+      let placeInput = document.getElementById("place")
+    
+    placeInput.addEventListener("onchange", function() {
+      console.log(this.value)
+    })
+
+      //document.getElementById('id1').value='text to be displayed' ;
+      console.log(e)
+    }
     const showfood = (category) => {
+      document.getElementById("tfoot").hidden = true;
+      document.getElementById("tbody").hidden=true;
+      document.getElementById("theading").hidden=true;
+      document.getElementById("tform").hidden=true;
       document.getElementById('list').innerHTML = ""
       let newJson = JSON.stringify({
         category: category
@@ -392,10 +442,11 @@
           resp.map((item) => {
             var div = document.createElement('div')
             div.classList.add("item")
-            var html = '<div class="buttons"> <span class="delete-btn"></span> <span class="like-btn"></span> </div> <div class="image"> <img style="border-radius:6px;object-fit: cover;margin-left:0;height:80px;width: 80px;;" src=' + item.photo + ' alt="" /> </div> &nbsp; &nbsp; &nbsp; &nbsp; <div class="description"> <span>' + item.name + '</span> <span>' + item.detail + '</span> <span>...</span> </div> <div class="quantity"> <button class="plus-btn" type="button" name="button" onclick="increment(this)">+</button><input type="text" name="name" value="1" id="quantity" ><button class="minus-btn" type="button" name="button" onclick="decrement(this)">-</button> </div> <div class="total-price">₹'+item.price+'</div><button class="btt" type = "submit" onclick = "handleApp(' + item.iditem + ')">Add To cart</button>'
+            var html = '<div class="buttons"> <span class="delete-btn"></span> <span class="like-btn"></span> </div> <div class="image"> <img style="margin-left:0;height:80px;width: 80px;;" src=' + item.photo + ' alt="" /> </div> &nbsp; &nbsp; &nbsp; &nbsp; <div class="description"> <span>' + item.name + '</span> <span>' + item.detail + '</span> <span>Brown</span> </div> <div class="quantity"> <button class="plus-btn" type="button" name="button" onclick="increment(this)">+</button><input type="text" name="name" value="1" id="quantity" ><button class="minus-btn" type="button" name="button" onclick="decrement(this)">-</button> </div> <div class="total-price">₹' + item.price + '</div><button class="btt" type = "submit" onclick = "handleApp(' + item.iditem + ',this,'+item.price+')">Add To cart</button>'
             div.innerHTML = html
             console.log(div)
             document.getElementById('list').append(div)
+            
           })
         })  
     }
@@ -410,36 +461,48 @@
       showfood("food")
     })()
     const cartList = () => {
-      
-            console.log("list")
-            fetch('http://localhost:3001/cartItems')
-                .then(res => res.json())
-                .then(resp => {
-                 // console.log(resp);
-                  document.getElementById("tbody").innerHTML = "";
-                  document.getElementById('list').innerHTML = ""
-                    let sum = 0;
-                    resp.results.map((item) => {
-                      const li = document.createElement('tr');
-                    tbl = '<td></td><td>' + item.name + '</td> <td> ' + item.price + '</td><td></td>'//+item.quantity
-                    sum=sum+item.price;
-                    li.innerHTML = tbl;
-                    console.log(item.name);
-                    document.getElementById("tbody").appendChild(li);
-                });
-                     document.getElementById("totalPrice").innerText = sum
-                })
-                .catch(err => console.log(err))
-        }
-       
-        cartList()
+      document.getElementById("tbody").hidden=false;
+      document.getElementById("tfoot").hidden = false;
+      document.getElementById("theading").hidden=false;
+      document.getElementById("tform").hidden=false;
+      document.getElementById('list').innerHTML = ""
+      document.getElementById('tbody').innerHTML = ""
+      console.log("list")
+      const user_id = JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id
+      fetch(`http://localhost:3001/cartItems?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(resp => {
+          // console.log(resp);
+          // document.getElementById("tbody").innerHTML = "";
+          // document.getElementById('list').innerHTML = ""
+          let sum = 0;
+          resp.results.map((item) => {
+            let tSum = item.quantity * item.price;
+            sum += tSum
+            const li = document.createElement('tr');
+            tbl = '<td>' + item.name + '</td> <td> Rs' + item.price + '</td><td> ' + item.quantity + '</td> <td> Rs' + tSum + '</td><td></td>'
+            li.innerHTML = tbl;
+            console.log(item.name);
+            document.getElementById("tbody").appendChild(li);
+          });
+          document.getElementById("totalPrice").innerText = sum + (0.1*sum)
 
-const handleApp = (iditem) => {
-    console.log(iditem);
-    var jsonObj = {
-        iditem: iditem
+        })
+        .catch(err => console.log(err))
     }
-    console.log(jsonObj);
+       
+    cartList()
+
+  const handleApp = (iditem, e,price) => {
+    const user_id = JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id
+      //console.log(e.parentElement.children[3].children[1].value);
+      var jsonObj = {
+        iditem: iditem,
+        qty: e.parentElement.children[3].children[1].value,
+        price: price,
+        user_id: user_id
+      }
+      //console.log(jsonObj);
 
 
     fetch('http://localhost:3001/cart', {
@@ -449,9 +512,11 @@ const handleApp = (iditem) => {
     })
         .then(res => res.json())
         .then(json => {
+          //console.log(json)
             if (json.status) {
                 console.log("true");
-                cartList()
+                alert("Item added successfully")
+                //cartList()
                 return;
             }
 
@@ -460,7 +525,132 @@ const handleApp = (iditem) => {
 
 
 }
-  </script>
+
+  //confirm order
+  const confirmOrder = () => {
+
+    let res = checkSufficientCoins();
+  }
+  //To check if there is sufficient coins for the user to make the purchase
+  const checkSufficientCoins = async () => {
+    const user_id = JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id
+    await fetch(`http://localhost:3001/sufficientCoins?user_id=${user_id}`)
+        .then(res => res.json()).then(json => {
+          console.log("coins, ", json.data[0].coins, " , ", Number(document.getElementById("totalPrice").innerText))
+          if((Number(document.getElementById("totalPrice").innerText) + 0.10*(Number(document.getElementById("totalPrice").innerText)) ) <= json.data[0].coins) {
+            
+            addOrder()
+          } else {
+            alert("You dont have sufficient coins");
+            emptyCartItems()
+            cartList()
+          }
+          
+          //return json.status;
+        }).catch(error => {
+          console.log(error)
+        })
+  }
+  //To add order to delivery items list
+  const addOrder = async () => {
+    const user_id = JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id
+    await fetch(`http://localhost:3001/cartItems?user_id=${user_id}`)
+        .then(res => res.json()).then(json => {
+        if(json.status) {
+          //console.log("Confrm Order ",json)
+          
+          let order_id=Math.floor(Math.random() * 10000)
+          console.log(JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id)
+          let user_id =  JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id;
+          let items = "";
+          let date = `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()}`;
+          let time = new Date().getTime();
+          let place = prompt("Which place you want you order to go?")
+          for(let x in json.results) {
+            if(json.results[x].quantity>1) {
+              for(let i=1; i<=json.results[x].quantity; i++) {
+                items +=`${json.results[x].iditem}` + ","
+              }
+            } else {
+              items += `${json.results[x].iditem}` + ","
+            }
+          }
+          updateCoinsForUser()
+          emptyCartItems()
+          cartList()
+        fetch(`http://localhost:3001/confirmOrder?order_id=${order_id}&user_id=${user_id}&date=${date}&time=${time}&items=${items}&place=${place}`, {
+            method: "POST",
+            headers: { "Content-type": "application/json; charset=UTF-8" }
+        })
+            .then(res => res.json()).then(json => {
+              console.log("got a response from confirmOrder, ", json )
+              if(json.status) {
+                console.log("successfully addded to orders")
+                console.log("orders",json);
+                cartList()
+              }
+            }).catch(error => {
+              console.log(error)
+              cartList()
+            })
+        }
+      }).catch(error => {
+        console.log(error)
+      }).catch(err => {
+        console.log(err)
+      })
+      cartList()
+  }
+
+  const emptyCartItems = async () => {
+    
+    const user_id = JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id
+    var jsonObj = {
+      user_id: user_id
+    }
+    console.log("empty cart items function called ", user_id)
+    //console.log(jsonObj);
+  await fetch('http://localhost:3001/emptyCartItems', {
+      method: "POST",
+      body: JSON.stringify(jsonObj),
+      headers: { "Content-type": "application/json; charset=UTF-8" }
+  }).then(res => res.json()).then(json => {
+    if(json.status) {
+      console.log("Cart items Deleted successfully")
+    } else {
+      console.log("Unable to delete items successfully")
+    }
+  }).catch(error => {
+    console.log(error);
+  })
+  }
+
+  const updateCoinsForUser = async () => {
+    const user_id = JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id
+    const totalCost = Number(document.getElementById("totalPrice").innerText) + 0.10*(Number(document.getElementById("totalPrice").innerText))
+    var jsonObj = {
+      user_id: user_id,
+      totalCost: totalCost
+    }
+    await fetch('http://localhost:3001/updateCoins', {
+      method: "POST",
+      body: JSON.stringify(jsonObj),
+      headers: { "Content-type": "application/json; charset=UTF-8" }
+  }).then(res => res.json()).then(json => {
+    if(json.status) {
+      console.log("Updated the coins successfully")
+      alert("Your order has been placed successfully")
+      showfood('food')
+    } else {
+      console.log("Unable to update coins")
+    }
+  }).catch(error => {
+    console.log(error)
+  })
+  }
+
+
+</script>
 </body>
 
 </html>

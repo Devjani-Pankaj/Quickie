@@ -7,8 +7,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
     .table-container {
-      overflow: auto;
-      
+      overflow: scroll;
+      margin-bottom: 40px;
     }
     #delivery-table-list{
       width: 100%;
@@ -121,6 +121,19 @@
       text-transform: capitalize;
      
      
+    }
+    .order-list-count {
+      background-color: #f0f6eb;
+    position: absolute;
+    bottom: 12px;
+    right: 7px;
+    text-align: left;
+    z-index: 21;
+    font-size: 15px;
+    width: 20px;
+    height: 18px;
+    border-radius: 8px;
+    color: black;
     }
     .order-list-buttons {
      
@@ -243,6 +256,30 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script>
        const head=(1,2,3,4,5,6)
+
+       const updateCoinsForUser = async () => {
+        const user_id = JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id
+        const totalCost = Number(document.getElementById("totalPrice").innerText) + 0.10*(Number(document.getElementById("totalPrice").innerText))
+        var jsonObj = {
+          user_id: user_id,
+          totalCost: totalCost
+        }
+        await fetch('http://localhost:3001/updateCoins', {
+          method: "POST",
+          body: JSON.stringify(jsonObj),
+          headers: { "Content-type": "application/json; charset=UTF-8" }
+      }).then(res => res.json()).then(json => {
+        if(json.status) {
+          console.log("Updated the coins successfully")
+        } else {
+          console.log("Unable to update coins")
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+      }
+    
+    
       /*
       let orderDetailsStatus = false;
       const addHidden = () => {
@@ -250,7 +287,18 @@
         console.log("added hidden")
         element.classList.add("hidden");
       }*/
-      const fillOrderDetails =  (items) => {
+      const fillOrderDetails =  (items, order_id) => {
+        
+        let listArr = items.split(",")
+        let orderListObj = {};
+        console.log("from fillOrderDetails - listArr", listArr)
+        for(let x of listArr) {
+          orderListObj[listArr[x]]= 0
+        }
+        for(let x in listArr) {
+          console.log(listArr[x])
+        }
+        console.log("from fillOrderDetails - orderListObj", orderListObj)
         var element = document.getElementById("order-details");
         element.style.display="block";
         element.classList.remove("hidden");
@@ -259,16 +307,17 @@
           method: "GET",
           headers: { "Content-type": "application/json; charset=UTF-8" },
         }).then(res => res.json()).then(json => {
+          console.log("getting res from itemsList", json);
           if(json.status) {
-            //console.log("getting res from itemsList");
-
+            
             let el = "";
             el += `<span style=""><i class="fa fa-shopping-cart"></i> &nbsp;ITEM LIST</span>` 
             el += `<div class="order-list">`
              
             json.data.map(itemList => {
               el += `<span class="relative-container"><img  class="order-list-photo" src="${itemList.photo}">
-            <span class="order-list-name">${itemList.name}</span></img> </span>`
+            <span class="order-list-name">${itemList.name}</span></img> 
+          <span class="order-list-count">2</span></span>`
             })
            
             el+="</div>"
@@ -277,27 +326,62 @@
             
             el+=`<div class="order-list-buttons">`
             el+="<span> Confirm?<br> <span>"
-            el += `<button onclick="confirmyes()" class="green-button"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;Yes</button>`
+            el += `<button onclick="confirmyes(${order_id})" class="green-button"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;Yes</button>`
             el += `<button onclick="confirmno()" class="red-button" ><i class="fa fa-close" aria-hidden="true"></i>&nbsp;Cancel</button>`
               el+="</div>"
               element.innerHTML += el;
               el = "";
           } else {
-            console.log("getting error from itemsList")
+            console.log("getting error from itemsList", json)
           }
         }).catch(err => {
           console.error(err)
         })
         element.classList.remove("hidden");
       }
-      function confirmyes()
+      async function confirmyes(order_id)
       {
+        console.log("order_id: ", order_id)
         var element=document.getElementById("order-details");
         element.innerHTML=`<div  class="confirmed-yes"><span>Please wait while we process your request.<br> </span></div>`;
-        setTimeout(function(){
-       
-          element.innerHTML=`<div class="confirmed-yes"><span>&#x2705;CONFIRMED.<br> Redirecting to the confirmation page...</span></div>`;
-        }, 2000); 
+        const user_id = JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id
+        var jsonObj = {
+          user_id: user_id,
+          totalCost: 50,
+        }
+        console.log("Order id",order_id)
+        await fetch('http://localhost:3001/incrementCoins', {
+          method: "POST",
+          body: JSON.stringify(jsonObj),
+          headers: { "Content-type": "application/json; charset=UTF-8" }
+        }).then(res => res.json()).then(json => {
+        if(json.status) {
+          console.log("Order accepted")
+          element.style.display="none";
+          var orderObject = {
+            order_id: order_id,
+          }
+          fetch('http://localhost:3001/updateOrderStatus', {
+            method: "POST",
+            body: JSON.stringify(orderObject),
+            headers: { "Content-type": "application/json; charset=UTF-8" }
+          }).then(res => res.json()).then(json => {
+            if(json.status) {
+              console.log("updated order");
+              deliveryData()
+              alert("You have secured one order")
+            } else {
+              console.log("Unable to update order")
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+        } else {
+          console.log("Order not accepted")
+        }
+      }).catch(error => {
+        console.log(error)
+      })
        
         setTimeout(() => {
           element.style.display="none";
@@ -314,10 +398,13 @@
         var element=document.getElementById("order-details");
         element.style.display="none";
       }
-      const acceptFunc = (items) => {
+      const acceptFunc = (items, order_id) => {
         orderDetailsStatus = true;
+        
+        let listArray = items.split(",");
         console.log("items from acceptfunc", items)
-        fillOrderDetails(items);
+        console.log("items from acceptfunc", listArray)
+        fillOrderDetails(items, order_id);
       }
       const rejectFunc = (items) => {
         orderDetailsStatus=true;
@@ -357,7 +444,10 @@
               json.data.map(x=>{
                 tr+='<tr>';
                   Object.keys(x).map(item => {
-                    if(item === "time") {
+                    if(item === "status") {
+
+                    }
+                    else if(item === "time") {
                       tr += '<td>' + new Date(x[item]).getHours() + ":" + new Date(x[item]).getMinutes() + ":" + new Date(x[item]).getSeconds()  + '</td>'
                     } else if(item === "date") {
                       tr += '<td>' + new Date(x[item]).getDate() + "/" + new Date(x[item]).getMonth() + "/" + new Date(x[item]).getFullYear() + '</td>'
@@ -372,7 +462,15 @@
                     
                   })
                   let itemList = x.items
-                tr+='<td>' + "<button onclick=acceptFunc(" + JSON.stringify(itemList) + ") >Accept</button>" + '</td>'
+                  if(x.user_id === JSON.parse(window.localStorage.getItem("loginData")).data[0].user_id) {
+                    tr+='<td>' + "<button" + " >Your Order</button>" + '</td>'
+                  } else if(x.status === 1) {
+                    tr+='<td>' + "<button" + " >Order grabbed</button>" + '</td>'
+                  }
+                  else {
+                    tr+='<td>' + "<button onclick=acceptFunc(" + JSON.stringify(itemList) + ","+ x.order_id + ") >Accept</button>" + '</td>'
+                  }
+                
                 //tr+='<td>' + `<button onclick=rejectFunc(${x["items"]})>Reject</button>` + '</td>'
                 tr+='</tr>'
               })
@@ -419,6 +517,6 @@
       
       </div>
     </div>
-    
+    <div>Your orders</div>
    
 </body> 
