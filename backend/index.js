@@ -119,7 +119,7 @@ app.get("/coinsAmount", (req, res) => {
     console.log("coinsAmount func called properly")
     //console.log(req.query.user_id)
     //console.log(`SELECT coins FROM quickie.user where user_id = ${req.query.user_id}`)
-    mysql.query(`SELECT coins FROM quickie.user where user.user_id = ${req.query.user_id}`, (err, results) => {
+    mysql.query('SELECT coins FROM quickie.user where user.user_id = ?', [req.query.user_id], (err, results) => {
         if (err) {
             res.send({
                 status: false,
@@ -139,15 +139,16 @@ app.get("/coinsAmount", (req, res) => {
 //To get items list from backend
 app.get("/itemsList", (req, res) => {
     console.log("called itemsList");
-    items = req.query.items;
+    let items = req.query.items;
     if(items.substring(items.length-1)===","){
         items = items.substring(0, items.length-1)
     }
-    console.log("items from itemslist",items)
-    mysql.query(`SELECT * FROM quickie.item where iditem in (${items})`, (err, results) => {
+    const itemIds = items.split(",").map(Number).filter(Number.isFinite);
+    console.log("items from itemslist",itemIds)
+    mysql.query('SELECT * FROM quickie.item where iditem in (?)', [itemIds], (err, results) => {
         console.log(results)
         if (err) {
-            console.log(items);
+            console.log(itemIds);
             res.send({
                 status: false,
                 data: err
@@ -163,10 +164,9 @@ app.get("/itemsList", (req, res) => {
 app.get("/userprofile", (req, res) => {
     console.log("called userprofile");
     
-    mysql.query(`SELECT * FROM quickie.user where user_id = ${req.query.user_id}`, (err, results) => {
+    mysql.query('SELECT * FROM quickie.user where user_id = ?', [req.query.user_id], (err, results) => {
         console.log(results)
         if (err) {
-            console.log(items);
             res.send({
 
                 status: false,
@@ -205,19 +205,12 @@ app.post('/cart', (req, res) => {
   });
 
 
-  //confirm order
-  app.post('/order', (req,res)=>{
-    mysql.query ("insert into order values")
-  })
 // pankaj code
 
 app.post('/getregistration', (req, res) => {
     console.log(req.query);
 });
 
-app.get("/", (req, res) => {
-    res.send("Hello from server");
-});
 app.get("/user", (req, res) => {
     let qry = "select * from user ";
     mysql.query(qry, (err, results) => {
@@ -254,8 +247,7 @@ app.post("/register", (req, res) => {
 // Menu
 app.post("/getCategory",(req,res)=>{
     console.log(req.body.category)
-    let qry = "select * from item where category_id='"+req.body.category+"'";
-    mysql.query(qry, (err, results) => {
+    mysql.query('select * from item where category_id=?', [req.body.category], (err, results) => {
         if (err) throw err
         else {
             res.send(results);
@@ -269,30 +261,9 @@ app.listen(port, (err) => {
     else
         console.log("Server is running at port %d:", port);
 });
-//cart
-app.post('/cart', (req, res) => {
-    console.log("cart called")
-    let iditem = req.body.iditem;
-    mysql.query('select * from cart where iditem = ? ',[iditem],function(err,results){
-        if(results.length>0)
-        {
-            mysql.query('update cart set quantity = quantity+1 where iditem = ?',[iditem],function(err,results){
-                if(err) throw err;
-                res.send({"status":true});
-        })
-        }
-        else{
-            mysql.query ('Insert into cart(iditem) values (?) ',[iditem],function(error,results){
-                if(error) throw error;
-                res.send({"status":true});
-             });
-        }
-    })
-    
-  });
 app.get("/cartItems", (req,res)=>{
-    
-    mysql.query(`select * from item join cart where cart.iditem=item.iditem and user_id = ${req.query.user_id}`, (err, results)=> {
+
+    mysql.query('select * from item join cart where cart.iditem=item.iditem and user_id = ?', [req.query.user_id], (err, results)=> {
       if(err) throw err;
       res.send({
         status: true,
@@ -303,7 +274,9 @@ app.get("/cartItems", (req,res)=>{
 
 app.post("/confirmOrder", (req, res) => {
     console.log("properly calling confirm order web service")
-    mysql.query(`INSERT INTO quickie.order (order_id, user_id, date, time, place, items) VALUES (${req.query.order_id}, ${req.query.user_id}, "${req.query.date}", "1000-01-01 06:40:00", "${req.query.place}", "${req.query.items}")`, (err, results) => {
+    mysql.query('INSERT INTO quickie.order (order_id, user_id, date, time, place, items) VALUES (?, ?, ?, ?, ?, ?)',
+        [req.query.order_id, req.query.user_id, req.query.date, "1000-01-01 06:40:00", req.query.place, req.query.items],
+        (err, results) => {
         if(err) {
             res.send({
                 status: false,
@@ -321,7 +294,7 @@ app.post("/confirmOrder", (req, res) => {
 app.get("/sufficientCoins", (req, res) => {
     console.log("Sufficient coins web service called")
     console.log(req.query.user_id)
-    mysql.query(`SELECT coins FROM quickie.user where user_id = ${req.query.user_id}`, (err, results) => {
+    mysql.query('SELECT coins FROM quickie.user where user_id = ?', [req.query.user_id], (err, results) => {
         if(err) {
             res.send({
                 status: false
@@ -337,7 +310,7 @@ app.get("/sufficientCoins", (req, res) => {
 
 app.post("/emptyCartItems", (req, res) => {
     console.log("emptyCartItems web service is called")
-    mysql.query(`Delete FROM quickie.cart where user_id = ${req.body.user_id}`, (err, results) => {
+    mysql.query('Delete FROM quickie.cart where user_id = ?', [req.body.user_id], (err, results) => {
         if(err) {
             res.send({
                 status: false
@@ -354,7 +327,7 @@ app.post("/emptyCartItems", (req, res) => {
 app.post("/updateCoins", (req, res) => {
     let user_id = req.body.user_id
     let totalCost = req.body.totalCost
-    mysql.query(`UPDATE quickie.user SET coins = coins-${totalCost} WHERE (user_id = ${user_id})`, (err, results) => {
+    mysql.query('UPDATE quickie.user SET coins = coins-? WHERE (user_id = ?)', [totalCost, user_id], (err, results) => {
         if(err) {
             res.send({
                 status: false
@@ -371,7 +344,7 @@ app.post("/updateCoins", (req, res) => {
 app.post("/incrementCoins", (req, res) => {
     let user_id = req.body.user_id
     let totalCost = req.body.totalCost
-    mysql.query(`UPDATE quickie.user SET coins = coins+${totalCost} WHERE (user_id = ${user_id})`, (err, results) => {
+    mysql.query('UPDATE quickie.user SET coins = coins+? WHERE (user_id = ?)', [totalCost, user_id], (err, results) => {
         if(err) {
             res.send({
                 status: false
@@ -388,7 +361,7 @@ app.post("/incrementCoins", (req, res) => {
 app.post("/updateOrderStatus", (req, res) => {
     let order_id1 = req.body.order_id
     console.log("ORDER ID ID",order_id1)
-    mysql.query(`UPDATE quickie.order SET status = 1 WHERE (order_id = ${order_id1})`, (err, results) => {
+    mysql.query('UPDATE quickie.order SET status = 1 WHERE (order_id = ?)', [order_id1], (err, results) => {
         if(err) {
             res.send({
                 status: false
