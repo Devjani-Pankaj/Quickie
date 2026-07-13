@@ -56,12 +56,7 @@ tables need to be created by hand to match the queries in `index.js`.
 ```bash
 cd backend
 npm install
-```
-
-Update `connection.js` with your local MySQL `host`, `user`, and
-`password` if they differ from the defaults in the file, then:
-
-```bash
+cp .env.example .env   # then edit .env with your local MySQL credentials
 npm start
 ```
 
@@ -75,18 +70,24 @@ is set up for Live Server on port 8080.
 
 ## Known limitations
 
-- Several routes build SQL queries with direct string interpolation
-  (e.g. `updateCoins`, `confirmOrder`, `sufficientCoins`, `cartItems`)
-  instead of parameterized queries — these are vulnerable to SQL
-  injection and shouldn't be used as-is beyond a local demo.
-- `backend/index.js` has two `app.get("/")` handlers and two
-  `app.post('/cart')` handlers; Express uses whichever was registered
-  first, so the second definition of each is currently dead code.
-- The `/order` POST route (`insert into order values`) is incomplete —
-  it doesn't supply values or send a response.
 - No database schema/migration file is included; tables must be created
   manually (see Setup above).
-- `node_modules` is committed to the repository instead of being
+- `npm audit` reports vulnerabilities in some transitive dependencies
+  (older `express`/`nodemon` versions); not yet upgraded since bumping
+  majors could change behavior and there's no test suite to catch
+  regressions.
+
+### Already fixed
+
+- ~~Several routes built SQL queries with direct string interpolation~~
+  — now use parameterized queries throughout.
+- ~~Duplicate dead route handlers (`app.get("/")`, `app.post('/cart')`)~~
+  — removed.
+- ~~The `/order` POST route was incomplete (no values, no response)~~
+  — removed in favor of the working `/confirmOrder` route.
+- ~~A real MySQL password was hardcoded in `connection.js`~~ — moved to
+  environment variables (`backend/.env.example`), no default fallback.
+- ~~`node_modules` was committed to the repository~~ — untracked and
   gitignored.
 
 ## Contributors
